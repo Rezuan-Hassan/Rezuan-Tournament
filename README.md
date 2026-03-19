@@ -1,5 +1,5 @@
 # 🏆 Rezuan's Tournament Bracket
-This is a web-based tournament management app designed for **22 teams**.
+This is a web-based tournament management app designed for **16 teams**.
 
 ## 🚀 Features
 * **Binary Tree Logic:** Uses a tree structure to manage match progression.
@@ -11,6 +11,6 @@ This is a web-based tournament management app designed for **22 teams**.
 * **JavaScript** for the tournament logic (translated from C).
 
 ## 🎮 How to Use
-1. Enter 22 team names.
+1. Enter 16 team names.
 2. The bracket will generate automatically.
 3. Click a match and type the winner's name to advance them to the next round!# Rezuan-Tournament
