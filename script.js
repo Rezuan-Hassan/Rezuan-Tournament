@@ -1,68 +1,67 @@
 let teams = [];
-const TOTAL_SLOTS = 32; // The nearest power of 2 for 22 teams
+let roundWinners = [];
 
 function addTeam() {
     let input = document.getElementById('teamInput');
-    if (input.value && teams.length < 22) {
+    // Change limit to 16
+    if (input.value && teams.length < 16) {
         teams.push(input.value);
         document.getElementById('count').innerText = teams.length;
         input.value = "";
-        // Once 22 teams are in, fill the rest with "BYE"
-        if (teams.length === 22) {
-            while (teams.length < TOTAL_SLOTS) {
-                teams.push("BYE");
-            }
-            startTournament();
+        
+        if (teams.length === 16) {
+            document.getElementById('setup').style.display = 'none';
+            renderRound(teams, "Round of 16");
         }
     }
 }
 
-function startTournament() {
-    document.getElementById('setup').style.display = 'none';
-    renderRound(teams);
-}
-
-function renderRound(currentTeams) {
+function renderRound(teamsInRound, roundName) {
     const bracket = document.getElementById('bracket');
-    if (currentTeams.length === 1) {
-        document.getElementById('winner-name').innerText = currentTeams[0];
-        return;
-    }
-    
     let roundDiv = document.createElement('div');
     roundDiv.className = "round";
-    let winners = [];
+    roundDiv.innerHTML = `<h3>${roundName}</h3>`;
     
-    for (let i = 0; i < currentTeams.length; i += 2) {
-        let t1 = currentTeams[i];
-        let t2 = currentTeams[i+1];
+    roundWinners = [];
 
-        // LOGIC: If one team is a "BYE", the other team wins automatically
-        if (t1 === "BYE" || t2 === "BYE") {
-            let actualTeam = (t1 === "BYE") ? t2 : t1;
-            winners.push(actualTeam);
-        } else {
-            // Normal Match
-            let match = document.createElement('div');
-            match.className = "match";
-            match.innerText = `${t1} vs ${t2}`;
-            match.onclick = () => {
-                let winner = prompt(`Who won? ${t1} or ${t2}`);
-                if (winner === t1 || winner === t2) {
-                    winners.push(winner);
-                    match.innerText = `Winner: ${winner}`;
-                    match.style.background = "#00ff0033";
-                    match.onclick = null;
-                    if (winners.length === currentTeams.length / 2) renderRound(winners);
+    for (let i = 0; i < teamsInRound.length; i += 2) {
+        let t1 = teamsInRound[i];
+        let t2 = teamsInRound[i+1];
+
+        let match = document.createElement('div');
+        match.className = "match";
+        match.innerText = `${t1} vs ${t2}`;
+
+        match.onclick = function() {
+            let win = prompt(`Winner of ${t1} vs ${t2}?`);
+            if (win === t1 || win === t2) {
+                roundWinners.push(win);
+                this.innerText = `✅ ${win}`;
+                this.style.background = "#006400"; 
+                this.onclick = null;
+
+                // Move to next round when all matches in current round are done
+                if (roundWinners.length === teamsInRound.length / 2) {
+                    if (roundWinners.length === 1) {
+                        showChampion(roundWinners[0]);
+                    } else {
+                        let nextRoundName = "";
+                        if (roundWinners.length === 8) nextRoundName = "Quarter-Finals";
+                        else if (roundWinners.length === 4) nextRoundName = "Semi-Finals";
+                        else if (roundWinners.length === 2) nextRoundName = "Grand Final";
+                        
+                        renderRound(roundWinners, nextRoundName);
+                    }
                 }
-            };
-            roundDiv.appendChild(match);
-        }
+            }
+        };
+        roundDiv.appendChild(match);
     }
-    // If all matches in this round were BYEs, move to next round immediately
-    if (winners.length === currentTeams.length / 2 && roundDiv.children.length === 0) {
-        renderRound(winners);
-    } else {
-        bracket.appendChild(roundDiv);
-    }
+    bracket.appendChild(roundDiv);
+}
+
+function showChampion(winner) {
+    document.getElementById('winner-name').innerText = winner;
+    document.getElementById('champion-display').style.color = "#FFD700"; 
+    alert("🏆 TOURNAMENT CHAMPION: " + winner);
 }
