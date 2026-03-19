@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pro Tournament Bracket</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>22-Team Championship</h1>
+        <div id="setup">
+            <input type="text" id="teamInput" placeholder="Enter Team Name">
+            <button onclick="addTeam()">Add Team</button>
+            <p>Teams: <span id="count">0</span> / 22</p>
+        </div>
+        <div id="bracket" class="bracket"></div>
+        <h2 id="champion-display">Winner: <span id="winner-name">TBD</span></h2>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
