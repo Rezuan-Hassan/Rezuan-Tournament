@@ -1,11 +1,11 @@
 let teams = [];
 let currentRoundTeams = [];
-let nextRoundWinners = [];
+let winnersOfThisRound = [];
 
-// Sync the limit text with dropdown
+// Update the limit display when dropdown changes
 document.getElementById('maxTeams').addEventListener('change', function() {
-    document.getElementById('limit-text').innerText = this.value;
-    teams = []; // Reset if they change size mid-entry
+    document.getElementById('limit-display').innerText = this.value;
+    teams = []; // Reset teams list
     document.getElementById('count').innerText = "0";
 });
 
@@ -20,6 +20,7 @@ function addTeam() {
         document.getElementById('count').innerText = teams.length;
         input.value = "";
         
+        // CHECK IF LIMIT IS REACHED
         if (teams.length === limit) {
             startTournament();
         }
@@ -27,26 +28,23 @@ function addTeam() {
 }
 
 function startTournament() {
+    // 1. Hide Setup
     document.getElementById('setup-section').classList.add('hidden');
+    
+    // 2. Initialize first round
     currentRoundTeams = [...teams];
-    renderRound(currentRoundTeams, getRoundName(currentRoundTeams.length));
+    winnersOfThisRound = [];
+    renderRound(currentRoundTeams);
 }
 
-function getRoundName(count) {
-    if (count <= 2) return "Grand Final";
-    if (count <= 4) return "Semi-Finals";
-    if (count <= 8) return "Quarter-Finals";
-    return `Round of ${count}`;
-}
-
-function renderRound(teamsInRound, roundName) {
+function renderRound(teamsInRound) {
     const bracket = document.getElementById('bracket');
+    const roundCount = teamsInRound.length;
+    
     let roundDiv = document.createElement('div');
     roundDiv.className = "round";
-    roundDiv.innerHTML = `<h3>${roundName}</h3>`;
+    roundDiv.innerHTML = `<h3>${getRoundName(roundCount)}</h3>`;
     
-    nextRoundWinners = [];
-
     for (let i = 0; i < teamsInRound.length; i += 2) {
         let t1 = teamsInRound[i];
         let t2 = teamsInRound[i+1];
@@ -54,39 +52,46 @@ function renderRound(teamsInRound, roundName) {
         let match = document.createElement('div');
         match.className = "match-card";
         match.innerHTML = `
-            <div class="team-slot" onclick="setWinner(this, '${t1}')">${t1}</div>
+            <div class="team-slot" onclick="selectWinner(this, '${t1}')">${t1}</div>
             <div class="vs">VS</div>
-            <div class="team-slot" onclick="setWinner(this, '${t2}')">${t2}</div>
+            <div class="team-slot" onclick="selectWinner(this, '${t2}')">${t2}</div>
         `;
         roundDiv.appendChild(match);
     }
     bracket.appendChild(roundDiv);
-    // Smooth scroll to the new round
-    bracket.scrollLeft = bracket.scrollWidth;
+    winnersOfThisRound = []; // Reset for the newly created round
 }
 
-function setWinner(element, winner) {
-    if (element.parentElement.classList.contains('completed')) return;
+function selectWinner(element, winnerName) {
+    let matchCard = element.parentElement;
     
-    element.parentElement.classList.add('completed');
+    // Prevent changing winner after selection
+    if (matchCard.classList.contains('completed')) return;
+    
+    matchCard.classList.add('completed');
     element.classList.add('winner-glow');
-    nextRoundWinners.push(winner);
+    winnersOfThisRound.push(winnerName);
 
-    // Check if round is over
-    const totalMatchesInRound = currentRoundTeams.length / 2;
-    if (nextRoundWinners.length === totalMatchesInRound) {
-        if (nextRoundWinners.length === 1) {
-            showChampion(nextRoundWinners[0]);
+    // If all matches in current round are decided
+    if (winnersOfThisRound.length === currentRoundTeams.length / 2) {
+        if (winnersOfThisRound.length === 1) {
+            finishTournament(winnersOfThisRound[0]);
         } else {
-            currentRoundTeams = [...nextRoundWinners];
-            renderRound(currentRoundTeams, getRoundName(currentRoundTeams.length));
+            currentRoundTeams = [...winnersOfThisRound];
+            renderRound(currentRoundTeams);
         }
     }
 }
 
-function showChampion(winner) {
+function getRoundName(count) {
+    if (count === 2) return "Grand Final";
+    if (count === 4) return "Semi-Finals";
+    if (count === 8) return "Quarter-Finals";
+    return `Round of ${count}`;
+}
+
+function finishTournament(champion) {
     document.getElementById('champion-display').classList.remove('hidden');
-    document.getElementById('winner-name').innerText = winner;
-    // Trigger your "Rezuan" alert style
-    console.log("🏆 Champion crowned: " + winner);
+    document.getElementById('winner-name').innerText = champion;
+    window.scrollTo(0, document.body.scrollHeight);
 }
