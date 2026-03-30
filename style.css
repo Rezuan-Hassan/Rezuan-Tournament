@@ -1,92 +1,107 @@
-let teams = [];
-let currentRoundTeams = [];
-let nextRoundWinners = [];
-
-// Sync the limit text with dropdown
-document.getElementById('maxTeams').addEventListener('change', function() {
-    document.getElementById('limit-text').innerText = this.value;
-    teams = []; // Reset if they change size mid-entry
-    document.getElementById('count').innerText = "0";
-});
-
-function addTeam() {
-    let input = document.getElementById('teamInput');
-    let limit = parseInt(document.getElementById('maxTeams').value);
-
-    if (input.value.trim() === "") return;
-
-    if (teams.length < limit) {
-        teams.push(input.value.trim());
-        document.getElementById('count').innerText = teams.length;
-        input.value = "";
-        
-        if (teams.length === limit) {
-            startTournament();
-        }
-    }
+:root {
+    --bg: #0a0a0a;
+    --card-bg: #151515;
+    --neon-green: #00ff88;
+    --glow: rgba(0, 255, 136, 0.3);
+    --text-dim: #888;
 }
 
-function startTournament() {
-    document.getElementById('setup-section').classList.add('hidden');
-    currentRoundTeams = [...teams];
-    renderRound(currentRoundTeams, getRoundName(currentRoundTeams.length));
+body {
+    background: var(--bg);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0; padding: 20px;
+    text-align: center;
 }
 
-function getRoundName(count) {
-    if (count <= 2) return "Grand Final";
-    if (count <= 4) return "Semi-Finals";
-    if (count <= 8) return "Quarter-Finals";
-    return `Round of ${count}`;
+header h1 {
+    color: var(--neon-green);
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px var(--neon-green);
+    margin-bottom: 5px;
 }
 
-function renderRound(teamsInRound, roundName) {
-    const bracket = document.getElementById('bracket');
-    let roundDiv = document.createElement('div');
-    roundDiv.className = "round";
-    roundDiv.innerHTML = `<h3>${roundName}</h3>`;
-    
-    nextRoundWinners = [];
-
-    for (let i = 0; i < teamsInRound.length; i += 2) {
-        let t1 = teamsInRound[i];
-        let t2 = teamsInRound[i+1];
-
-        let match = document.createElement('div');
-        match.className = "match-card";
-        match.innerHTML = `
-            <div class="team-slot" onclick="setWinner(this, '${t1}')">${t1}</div>
-            <div class="vs">VS</div>
-            <div class="team-slot" onclick="setWinner(this, '${t2}')">${t2}</div>
-        `;
-        roundDiv.appendChild(match);
-    }
-    bracket.appendChild(roundDiv);
-    // Smooth scroll to the new round
-    bracket.scrollLeft = bracket.scrollWidth;
+.card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    max-width: 500px;
+    margin: 20px auto;
 }
 
-function setWinner(element, winner) {
-    if (element.parentElement.classList.contains('completed')) return;
-    
-    element.parentElement.classList.add('completed');
-    element.classList.add('winner-glow');
-    nextRoundWinners.push(winner);
+.input-group { margin: 15px 0; display: flex; justify-content: center; gap: 10px; }
 
-    // Check if round is over
-    const totalMatchesInRound = currentRoundTeams.length / 2;
-    if (nextRoundWinners.length === totalMatchesInRound) {
-        if (nextRoundWinners.length === 1) {
-            showChampion(nextRoundWinners[0]);
-        } else {
-            currentRoundTeams = [...nextRoundWinners];
-            renderRound(currentRoundTeams, getRoundName(currentRoundTeams.length));
-        }
-    }
+input, select {
+    background: #000;
+    border: 1px solid var(--neon-green);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    outline: none;
 }
 
-function showChampion(winner) {
-    document.getElementById('champion-display').classList.remove('hidden');
-    document.getElementById('winner-name').innerText = winner;
-    // Trigger your "Rezuan" alert style
-    console.log("🏆 Champion crowned: " + winner);
+.action-btn {
+    background: var(--neon-green);
+    color: black;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.bracket-wrapper {
+    overflow-x: auto;
+    padding: 40px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.bracket { display: flex; gap: 50px; align-items: flex-start; margin: 0 auto; }
+
+.round h3 { color: var(--neon-green); border-bottom: 1px solid var(--neon-green); padding-bottom: 10px; }
+
+.match-card {
+    background: var(--card-bg);
+    border: 1px solid #333;
+    border-radius: 12px;
+    margin: 15px 0;
+    padding: 10px;
+    width: 180px;
+    transition: 0.3s;
+}
+
+.team-slot {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.team-slot:hover { background: #222; color: var(--neon-green); }
+
+.vs { font-size: 10px; color: var(--text-dim); margin: 5px 0; }
+
+.winner-glow {
+    background: var(--neon-green) !important;
+    color: black !important;
+    box-shadow: 0 0 15px var(--neon-green);
+    font-weight: bold;
+}
+
+.hidden { display: none !important; }
+
+.champion-card {
+    margin-top: 40px;
+    padding: 30px;
+    border: 2px solid var(--neon-green);
+    border-radius: 30px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px var(--glow); }
+    50% { box-shadow: 0 0 30px var(--neon-green); }
+    100% { box-shadow: 0 0 10px var(--glow); }
 }
