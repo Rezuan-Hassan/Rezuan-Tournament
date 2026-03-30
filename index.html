@@ -19,14 +19,14 @@
                 <label>Tournament Size:</label>
                 <select id="maxTeams">
                     <option value="4">4 Teams</option>
-                    <option value="8">8 Teams (Quarter-Finals)</option>
-                    <option value="16">16 Teams (Round of 16)</option>
-                    <option value="32">32 Teams (Round of 32)</option>
+                    <option value="8">8 Teams</option>
+                    <option value="16">16 Teams</option>
+                    <option value="32">32 Teams</option>
                 </select>
             </div>
             
             <div class="input-group">
-                <input type="text" id="teamInput" placeholder="Enter Team Name...">
+                <input type="text" id="teamInput" placeholder="Type name and press Enter..." autocomplete="off">
                 <button onclick="addTeam()" class="action-btn">Add Team</button>
             </div>
             <p class="status">Registered: <span id="count">0</span> / <span id="limit-display">4</span></p>
