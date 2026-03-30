@@ -9,7 +9,7 @@
 body {
     background: var(--bg);
     color: white;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     margin: 0; padding: 20px;
     text-align: center;
 }
@@ -18,10 +18,7 @@ header h1 {
     color: var(--neon-green);
     letter-spacing: 4px;
     text-shadow: 0 0 15px var(--neon-green);
-    margin-bottom: 5px;
 }
-
-.subtitle { color: var(--text-dim); font-size: 14px; letter-spacing: 1px; }
 
 .card {
     background: var(--card-bg);
@@ -42,7 +39,6 @@ input, select {
     border-radius: 12px;
     outline: none;
     width: 80%;
-    transition: 0.3s;
 }
 
 input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px var(--glow); }
@@ -53,25 +49,14 @@ input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px var(--glow);
     border: none;
     padding: 12px 30px;
     border-radius: 12px;
-    font-weight: 900;
+    font-weight: bold;
     cursor: pointer;
-    text-transform: uppercase;
 }
 
-.bracket-wrapper {
-    overflow-x: auto;
-    padding: 40px 0;
-}
-
+.bracket-wrapper { overflow-x: auto; padding: 40px 0; }
 .bracket { display: flex; gap: 60px; align-items: flex-start; padding: 0 20px; }
 
-.round h3 { 
-    color: var(--neon-green); 
-    border-bottom: 1px solid var(--neon-green); 
-    padding-bottom: 10px; 
-    font-size: 1.2rem;
-    min-width: 200px;
-}
+.round h3 { color: var(--neon-green); border-bottom: 1px solid var(--neon-green); padding-bottom: 10px; min-width: 200px; }
 
 .match-card {
     background: var(--card-bg);
@@ -82,17 +67,8 @@ input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px var(--glow);
     width: 200px;
 }
 
-.team-slot {
-    padding: 12px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: 0.3s;
-    font-weight: 500;
-}
-
+.team-slot { padding: 12px; cursor: pointer; border-radius: 8px; transition: 0.3s; }
 .team-slot:hover { background: #222; color: var(--neon-green); }
-
-.vs { font-size: 10px; color: var(--text-dim); margin: 5px 0; font-weight: bold; }
 
 .winner-glow {
     background: var(--neon-green) !important;
@@ -110,14 +86,4 @@ input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px var(--glow);
     border-radius: 30px;
     max-width: 400px;
     background: var(--card-bg);
-}
-
-.reset-btn {
-    background: transparent;
-    color: var(--neon-green);
-    border: 1px solid var(--neon-green);
-    padding: 10px 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 20px;
 }
